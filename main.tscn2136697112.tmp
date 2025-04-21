@@ -1,0 +1,47 @@
+[gd_scene load_steps=9 format=3 uid="uid://c28mudarupieb"]
+
+[ext_resource type="Script" uid="uid://bsn07p1lohurx" path="res://cercle.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bkumvifadp6r2" path="res://circle_drawer.gd" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://cmd3kbonqqpiq" path="res://balle.gd" id="3_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://4ev0nmomte3e" path="res://circle-16.png" id="3_h2yge"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
+transparency = 1
+albedo_color = Color(0, 1, 1, 0.678431)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ig7tw"]
+material = SubResource("StandardMaterial3D_ig7tw")
+radius = 300.0
+height = 600.0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_h2yge"]
+friction = 0.2
+bounce = 0.9
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1bvp3"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Cercle" type="StaticBody2D" parent="."]
+script = ExtResource("1_ig7tw")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Cercle"]
+visible = false
+mesh = SubResource("SphereMesh_ig7tw")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="CircleDrawer" type="Line2D" parent="."]
+script = ExtResource("2_0xm2m")
+
+[node name="Balle" type="RigidBody2D" parent="."]
+position = Vector2(295, 0)
+physics_material_override = SubResource("PhysicsMaterial_h2yge")
+script = ExtResource("3_1bvp3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Balle"]
+shape = SubResource("CircleShape2D_1bvp3")
+
+[node name="Sprite2D" type="Sprite2D" parent="Balle"]
+scale = Vector2(1.1875, 1.1875)
+texture = ExtResource("3_h2yge")

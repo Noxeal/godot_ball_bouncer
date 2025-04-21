@@ -1,0 +1,88 @@
+[gd_scene load_steps=11 format=3 uid="uid://c28mudarupieb"]
+
+[ext_resource type="Script" uid="uid://bsn07p1lohurx" path="res://cercle.gd" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://bkumvifadp6r2" path="res://circle_drawer.gd" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://cmd3kbonqqpiq" path="res://balle.gd" id="3_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://dtew3f7y1hl4x" path="res://circle-512.png" id="4_1bvp3"]
+[ext_resource type="AudioStream" uid="uid://yictcwhlphx7" path="res://Clean Bandit - Symphony (feat. Zara Larsson) [Official Video].mp3" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://d0jd2tw2c2n40" path="res://timer.gd" id="6_7mycd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
+transparency = 1
+albedo_color = Color(0, 1, 1, 0.678431)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ig7tw"]
+material = SubResource("StandardMaterial3D_ig7tw")
+radius = 300.0
+height = 600.0
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_h2yge"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1bvp3"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Cercle" type="StaticBody2D" parent="."]
+script = ExtResource("1_ig7tw")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="Cercle"]
+visible = false
+mesh = SubResource("SphereMesh_ig7tw")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="CircleDrawer" type="Line2D" parent="."]
+script = ExtResource("2_0xm2m")
+
+[node name="Balle" type="RigidBody2D" parent="."]
+position = Vector2(78, 1)
+mass = 169.267
+physics_material_override = SubResource("PhysicsMaterial_h2yge")
+contact_monitor = true
+max_contacts_reported = 30
+script = ExtResource("3_1bvp3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Balle"]
+shape = SubResource("CircleShape2D_1bvp3")
+
+[node name="Sprite2D" type="Sprite2D" parent="Balle"]
+rotation = -3.14159
+scale = Vector2(0.04, 0.04)
+texture = ExtResource("4_1bvp3")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4580.0
+offset_top = -2568.0
+offset_right = -4540.0
+offset_bottom = -2528.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(414.455, 259.339)
+color = Color(0, 0, 0, 1)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_lquwl")
+
+[node name="Timer" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+script = ExtResource("6_7mycd")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Time left : "
+
+[connection signal="body_entered" from="Balle" to="Balle" method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="Balle" method="_on_timer_timeout"]
+[connection signal="timeout" from="Timer" to="Timer" method="_on_timeout"]
