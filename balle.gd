@@ -4,6 +4,7 @@ extends RigidBody2D
 @onready var collision_shape = $CollisionShape2D
 @onready var timer: Timer = $"../Timer"
 @onready var audio_stream_player: AudioStreamPlayer = $"../AudioStreamPlayer"
+@onready var bounce_particle: GPUParticles2D = $BounceParticle
 @export var velocity = Vector2(200,200)
 var is_playing = false
 
@@ -21,13 +22,17 @@ func _on_body_entered(body):
 	
 	sprite.scale *= 1.05
 	collision_shape.scale *= 1.05
-	
+	print("Scale : ", sprite.scale)
+
 	timer.start()
+	
+	bounce_particle.emitting = true
 	
 	if not is_playing:
 		audio_stream_player.play()
 		is_playing = true
 
 func _on_timer_timeout() -> void:
-	audio_stream_player.stop()
-	is_playing = false
+	if (sprite.scale < Vector2(3, 3)):
+		audio_stream_player.stop()
+		is_playing = false

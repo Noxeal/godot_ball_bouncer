@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://c28mudarupieb"]
+[gd_scene load_steps=13 format=3 uid="uid://c28mudarupieb"]
 
 [ext_resource type="Script" uid="uid://bsn07p1lohurx" path="res://cercle.gd" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://bkumvifadp6r2" path="res://circle_drawer.gd" id="2_0xm2m"]
 [ext_resource type="Script" uid="uid://cmd3kbonqqpiq" path="res://balle.gd" id="3_1bvp3"]
 [ext_resource type="Texture2D" uid="uid://dtew3f7y1hl4x" path="res://circle-512.png" id="4_1bvp3"]
+[ext_resource type="Texture2D" uid="uid://b241duwcq1kc" path="res://circle-64.png" id="5_272bh"]
 [ext_resource type="AudioStream" uid="uid://yictcwhlphx7" path="res://Clean Bandit - Symphony (feat. Zara Larsson) [Official Video].mp3" id="5_lquwl"]
 [ext_resource type="Script" uid="uid://d0jd2tw2c2n40" path="res://timer.gd" id="6_7mycd"]
 
@@ -22,6 +23,14 @@ bounce = 1.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1bvp3"]
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7mycd"]
+emission_shape = 1
+emission_sphere_radius = 56.78
+angle_min = -720.0
+angle_max = 720.0
+inherit_velocity_ratio = 1.0
+initial_velocity_max = 34.49
+
 [node name="Main" type="Node2D"]
 
 [node name="Cercle" type="StaticBody2D" parent="."]
@@ -30,8 +39,6 @@ script = ExtResource("1_ig7tw")
 [node name="MeshInstance2D" type="MeshInstance2D" parent="Cercle"]
 visible = false
 mesh = SubResource("SphereMesh_ig7tw")
-
-[node name="Camera2D" type="Camera2D" parent="."]
 
 [node name="CircleDrawer" type="Line2D" parent="."]
 script = ExtResource("2_0xm2m")
@@ -52,10 +59,24 @@ rotation = -3.14159
 scale = Vector2(0.04, 0.04)
 texture = ExtResource("4_1bvp3")
 
+[node name="BounceParticle" type="GPUParticles2D" parent="Balle"]
+scale = Vector2(-0.15, -0.15)
+emitting = false
+texture = ExtResource("5_272bh")
+lifetime = 0.26
+interp_to_end = 1.0
+one_shot = true
+speed_scale = 8.5
+explosiveness = 0.22
+local_coords = true
+trail_lifetime = 0.01
+process_material = SubResource("ParticleProcessMaterial_7mycd")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = -1
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -75,6 +96,7 @@ stream = ExtResource("5_lquwl")
 
 [node name="Timer" type="Timer" parent="."]
 process_callback = 0
+wait_time = 0.5
 one_shot = true
 script = ExtResource("6_7mycd")
 
@@ -83,6 +105,8 @@ visible = false
 offset_right = 40.0
 offset_bottom = 23.0
 text = "Time left : "
+
+[node name="Camera2D" type="Camera2D" parent="."]
 
 [connection signal="body_entered" from="Balle" to="Balle" method="_on_body_entered"]
 [connection signal="timeout" from="Timer" to="Balle" method="_on_timer_timeout"]
